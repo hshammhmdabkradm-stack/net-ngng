@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NET NGNG — Advanced Simulation</title>
+
+<style>
+:root{
+  --bg:#0b0f14; --text:#00ffcc; --panel:#111820;
+}
+.light{
+  --bg:#f5f5f5; --text:#003333; --panel:#ffffff;
+}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:monospace; overflow:hidden;
+}
+.center{display:flex;justify-content:center;align-items:center;height:100vh;text-align:center}
+.panel{
+  background:var(--panel); border:1px solid var(--text);
+  padding:12px; margin:10px 0;
+}
+input,button{
+  background:transparent; color:var(--text);
+  border:1px solid var(--text); padding:8px; margin:5px;
+  font-family:monospace; cursor:pointer;
+}
+.top{display:flex;justify-content:space-between;align-items:center}
+.progress{width:100%;height:10px;border:1px solid var(--text)}
+.bar{height:100%;width:0%;background:var(--text)}
+.map{
+  height:120px; display:flex;align-items:center;justify-content:center;
+  background:repeating-linear-gradient(45deg,#0a2a2a,#0a2a2a 10px,#061a1a 10px,#061a1a 20px)
+}
+#matrix{
+  position:fixed; inset:0; pointer-events:none; opacity:.15;
+}
+small{opacity:.7}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<!-- BOOT -->
+<div id="boot" class="center">
+  <h2>Initializing NET NGNG Core...</h2>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="center" style="display:none">
+  <div class="panel">
+    <h3>SECURE ACCESS</h3>
+    <input type="password" id="pass" placeholder="Password">
+    <br>
+    <button onclick="login()">ENTER</button>
+    <p id="error"></p>
+    <small>Simulation Environment</small>
+  </div>
+</div>
+
+<!-- SYSTEM -->
+<div id="system" style="display:none; padding:12px; height:100vh; overflow:auto">
+
+  <div class="top">
+    <h2>NET NGNG — COMMAND</h2>
+    <div>
+      <button onclick="toggleMode()">🌙</button>
+      <button onclick="logout()">LOGOUT</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p>Status: <span style="color:lime">CONNECTED</span></p>
+    <p>Mode: SIMULATION</p>
+    <p>⏳ Time Elapsed: <span id="timer">0</span>s</p>
+  </div>
+
+  <div class="panel">
+    <strong>🛰️ Active Task</strong>
+    <p id="task">Loading...</p>
+  </div>
+
+  <div class="panel">
+    <strong>📊 Mission Progress</strong>
+    <div class="progress"><div id="bar" class="bar"></div></div>
+  </div>
+
+  <div class="panel">
+    <strong>🗺️ Satellite Map</strong>
+    <div class="map">ORBITAL GRID — LIVE</div>
+  </div>
+
+  <div class="panel">
+    <strong>🧠 AI Analyst</strong>
+    <p id="ai">Awaiting data…</p>
+  </div>
+
+  <div class="panel">
+    <strong>🗂️ Investigation Files</strong>
+    <ul>
+      <li>CASE-01: Signal Intercept</li>
+      <li>CASE-02: Orbital Drift</li>
+      <li>CASE-03: Encrypted Node</li>
+    </ul>
+  </div>
+
+  <div class="panel">
+    <strong>📡 Logs</strong>
+    <p id="log">System stable</p>
+  </div>
+
+  <small>NET NGNG — Simulation Only</small>
+</div>
+
+<script>
+/* AUTH */
+const PASSWORD="net-ngng";
+
+/* BOOT */
+setTimeout(()=>{boot.style.display="none";login.style.display="flex"},2000);
+
+function login(){
+  if(pass.value===PASSWORD){
+    login.style.display="none"; system.style.display="block";
+    startSimulation(); startMatrix();
+  } else error.textContent="WRONG PASSWORD";
+}
+function logout(){location.reload();}
+function toggleMode(){document.body.classList.toggle("light");}
+
+/* SIMULATION */
+const tasks=[
+ "Tracking satellite signal…",
+ "Decrypting data stream…",
+ "Monitoring global nodes…",
+ "Scanning secure channels…",
+ "Analyzing orbital movement…"
+];
+const aiText=[
+ "Pattern indicates low risk.",
+ "Signal matches known satellite.",
+ "No hostile activity detected.",
+ "Encryption level: MEDIUM.",
+ "Awaiting further telemetry."
+];
+let p=0, t=0, i=0;
+
+function startSimulation(){
+  setInterval(()=>{
+    task.textContent=tasks[i%tasks.length];
+    ai.textContent=aiText[Math.floor(Math.random()*aiText.length)];
+    log.textContent="Update received at "+new Date().toLocaleTimeString();
+    p=(p+10)%110; bar.style.width=p+"%";
+    i++;
+  },2500);
+  setInterval(()=>{timer.textContent=++t},1000);
+}
+
+/* MATRIX EFFECT */
+function startMatrix(){
+  const c=document.getElementById("matrix"),x=c.getContext("2d");
+  c.width=innerWidth; c.height=innerHeight;
+  const letters="01"; const font=14;
+  const cols=c.width/font; const drops=[];
+  for(let i=0;i<cols;i++)drops[i]=1;
+  setInterval(()=>{
+    x.fillStyle="rgba(0,0,0,0.05)";
+    x.fillRect(0,0,c.width,c.height);
+    x.fillStyle="#00ffcc"; x.font=font+"px monospace";
+    for(let i=0;i<drops.length;i++){
+      const text=letters[Math.floor(Math.random()*letters.length)];
+      x.fillText(text,i*font,drops[i]*font);
+      if(drops[i]*font>c.height&&Math.random()>0.95)drops[i]=0;
+      drops[i]++;
+    }
+  },50);
+}
+</script>
+
+</body>
+                      </html>
